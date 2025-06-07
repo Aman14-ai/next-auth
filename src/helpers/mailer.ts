@@ -38,8 +38,8 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
         const transport  = nodemailer.createTransport({
             service:"gmail",
             auth:{
-                user:"amancode2005@gmail.com",
-                pass: "pacj dust ewgu nbyj"
+                user:process.env.EMAIL_ADDRESS,
+                pass:process.env.EMAIL_PASSWORD
             }
         })
         // set email options

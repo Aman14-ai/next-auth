@@ -1,54 +1,49 @@
 "use client"
+
 import axios from "axios"
 import { Suspense, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { toast, ToastContainer } from "react-toastify"
 import Link from "next/link"
 
-
-
-export default function VerifyEmail() {
+function VerifyEmailContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const token = searchParams.get("token");
+    const token = searchParams.get("token")
 
-    const [isVerified, setIsVerified] = useState(false);
-    const [error, setError] = useState(false);
+    const [isVerified, setIsVerified] = useState(false)
+    const [error, setError] = useState(false)
 
     const verifyUserEmail = async () => {
         try {
-            const response = await axios.post("/api/users/verifyEmail", { token });
-            console.log("Response from backend while verifying email");
-            console.log(response);
-            toast.success(response.data.message || "Email ");
-            setIsVerified(true);
-            setError(false);
-        }
-        catch (error: any) {
-            console.error("Error verifying email:", error);
-            toast.error(error?.data?.error || "Failed to verify email");
-            setError(true);
-
+            const response = await axios.post("/api/users/verifyEmail", { token })
+            console.log("Response from backend while verifying email")
+            console.log(response)
+            toast.success(response.data.message || "Email verified")
+            setIsVerified(true)
+            setError(false)
+        } catch (error: any) {
+            console.error("Error verifying email:", error)
+            toast.error(error?.data?.error || "Failed to verify email")
+            setError(true)
         }
     }
 
-
     useEffect(() => {
         if (token) {
-            verifyUserEmail();
+            verifyUserEmail()
         }
     }, [])
 
     return (
-         <Suspense fallback={<div className="text-center mt-8">Loading verification...</div>}>
-            
-        
-        <div className="text-center ">
+        <div className="text-center">
             <ToastContainer />
             <h1 className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] shadow-lg p-6 text-3xl font-semibold">Email Verification</h1>
-            <p className="mt-4 font-sans "><span className="font-serif font-semibold tracking-wider">Token</span>: <span className="text-white/80">{token ? `${token}` : "No token"}</span></p>
+            <p className="mt-4 font-sans ">
+                <span className="font-serif font-semibold tracking-wider">Token</span>:{" "}
+                <span className="text-white/80">{token ? token : "No token"}</span>
+            </p>
 
             {isVerified ? (
                 <>
@@ -66,9 +61,14 @@ export default function VerifyEmail() {
             ) : (
                 <p className="text-blue-500 mt-4"></p>
             )}
-
-
         </div>
+    )
+}
+
+export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={<div className="text-center mt-8">Loading verification...</div>}>
+            <VerifyEmailContent />
         </Suspense>
     )
 }
